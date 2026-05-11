@@ -1,0 +1,42 @@
+export const USERS = [
+  {
+    id: 'u1',
+    name: 'Carlos Rodríguez',
+    email: 'carlos@adgest.uy',
+    password: 'desp123',
+    role: 'despachante',
+    initials: 'CR',
+  },
+  {
+    id: 'u2',
+    name: 'Ana Fernández',
+    email: 'ana@adgest.uy',
+    password: 'desp123',
+    role: 'despachante',
+    initials: 'AF',
+  },
+  {
+    id: 'u3',
+    name: 'Luis Pérez',
+    email: 'luis@adgest.uy',
+    password: 'gest123',
+    role: 'gestor',
+    initials: 'LP',
+  },
+  {
+    id: 'u4',
+    name: 'María González',
+    email: 'maria@adgest.uy',
+    password: 'gest123',
+    role: 'gestor',
+    initials: 'MG',
+  },
+  {
+    id: 'u5',
+    name: 'Roberto Silva',
+    email: 'roberto@adgest.uy',
+    password: 'gest123',
+    role: 'gestor',
+    initials: 'RS',
+  },
+]
