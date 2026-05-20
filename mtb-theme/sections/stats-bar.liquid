@@ -1,0 +1,36 @@
+<div class="stats-bar">
+  {% for block in section.blocks %}
+    <div class="stat-item" {{ block.shopify_attributes }}>
+      <div class="stat-number">{{ block.settings.number }}</div>
+      <div class="stat-label">{{ block.settings.label }}</div>
+    </div>
+  {% endfor %}
+</div>
+
+{% schema %}
+{
+  "name": "Barra de estadísticas",
+  "max_blocks": 6,
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Estadística",
+      "settings": [
+        { "type": "text", "id": "number", "label": "Número", "default": "500+" },
+        { "type": "text", "id": "label", "label": "Etiqueta", "default": "Productos" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Barra de estadísticas",
+      "blocks": [
+        { "type": "stat", "settings": { "number": "500+", "label": "Productos" } },
+        { "type": "stat", "settings": { "number": "30+",  "label": "Marcas" } },
+        { "type": "stat", "settings": { "number": "2.400+", "label": "Clientes" } },
+        { "type": "stat", "settings": { "number": "24h",  "label": "Despacho" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

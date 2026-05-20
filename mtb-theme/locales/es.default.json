@@ -1,0 +1,20 @@
+{
+  "general": {
+    "add_to_cart": "Agregar al carrito",
+    "sold_out": "Agotado",
+    "unavailable": "No disponible",
+    "cart": "Carrito",
+    "checkout": "Ir al checkout",
+    "subtotal": "Subtotal",
+    "cart_empty": "Tu carrito está vacío",
+    "continue_shopping": "Seguir comprando",
+    "remove": "Eliminar",
+    "products": "productos",
+    "sort_by": "Ordenar por",
+    "sort_featured": "Destacados",
+    "sort_price_asc": "Precio: menor a mayor",
+    "sort_price_desc": "Precio: mayor a menor",
+    "sort_newest": "Más nuevos",
+    "added_to_cart": "¡Agregado al carrito!"
+  }
+}

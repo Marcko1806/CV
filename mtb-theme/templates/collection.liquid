@@ -1,0 +1,58 @@
+<div class="collection-header">
+  <h1>{{ collection.title }}</h1>
+  {% if collection.description != blank %}
+    <p style="color:#777; margin-top:8px;">{{ collection.description | strip_html }}</p>
+  {% endif %}
+</div>
+
+<div class="collection-toolbar">
+  <span class="collection-count">{{ collection.products_count }} productos</span>
+  <select class="sort-select" id="sort-select">
+    <option value="manual"{% if collection.sort_by == 'manual' %} selected{% endif %}>Destacados</option>
+    <option value="price-ascending"{% if collection.sort_by == 'price-ascending' %} selected{% endif %}>Precio: menor a mayor</option>
+    <option value="price-descending"{% if collection.sort_by == 'price-descending' %} selected{% endif %}>Precio: mayor a menor</option>
+    <option value="created-descending"{% if collection.sort_by == 'created-descending' %} selected{% endif %}>Más nuevos</option>
+    <option value="title-ascending"{% if collection.sort_by == 'title-ascending' %} selected{% endif %}>A–Z</option>
+  </select>
+</div>
+
+<div class="collection-grid">
+  {% if collection.products.size > 0 %}
+    <div class="products-grid">
+      {% paginate collection.products by 12 %}
+        {% for product in collection.products %}
+          {% render 'product-card', product: product %}
+        {% endfor %}
+      {% endpaginate %}
+    </div>
+
+    {% paginate collection.products by 12 %}
+      {% if paginate.pages > 1 %}
+        <div class="pagination">
+          {% if paginate.previous %}
+            <a href="{{ paginate.previous.url }}" class="page-btn">‹</a>
+          {% endif %}
+          {% for part in paginate.parts %}
+            {% if part.is_link %}
+              <a href="{{ part.url }}" class="page-btn">{{ part.title }}</a>
+            {% else %}
+              <button class="page-btn active" disabled>{{ part.title }}</button>
+            {% endif %}
+          {% endfor %}
+          {% if paginate.next %}
+            <a href="{{ paginate.next.url }}" class="page-btn">›</a>
+          {% endif %}
+        </div>
+      {% endif %}
+    {% endpaginate %}
+
+  {% else %}
+    <p style="color:#666; text-align:center; padding:60px 0;">No hay productos en esta categoría todavía.</p>
+  {% endif %}
+</div>
+
+<script>
+  document.getElementById('sort-select').addEventListener('change', function() {
+    window.location.search = '?sort_by=' + this.value;
+  });
+</script>

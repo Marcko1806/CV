@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ page_title }}{% unless page_title contains shop.name %} — {{ shop.name }}{% endunless %}</title>
+  <meta name="description" content="{{ page_description | default: shop.description | escape }}">
+  {{ content_for_head }}
+  {{ 'mtb-shop.css' | asset_url | stylesheet_tag }}
+</head>
+<body>
+
+  <!-- ── NAV ── -->
+  <nav>
+    <a href="/" class="nav-logo">Trail<span>Riders</span></a>
+    <ul class="nav-links">
+      {% for link in linklists.main-menu.links %}
+        <li>
+          <a href="{{ link.url }}"{% if link.active %} style="color:#2ecc71"{% endif %}>
+            {{ link.title }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+    <button class="cart-btn" id="cart-toggle" aria-label="Abrir carrito">
+      🛒 Carrito (<span id="cart-count">{{ cart.item_count }}</span>)
+    </button>
+  </nav>
+
+  <!-- ── CART DRAWER ── -->
+  <div class="cart-overlay" id="cart-overlay"></div>
+  <div class="cart-drawer" id="cart-drawer" aria-label="Carrito de compras">
+    <div class="cart-drawer-header">
+      <h3>🛒 Tu carrito</h3>
+      <button class="cart-close" id="cart-close" aria-label="Cerrar">✕</button>
+    </div>
+
+    <div class="cart-items" id="cart-items">
+      {% if cart.item_count == 0 %}
+        <div class="cart-empty">
+          <span>🏔️</span>
+          Tu carrito está vacío.<br>¡Explorá nuestros productos!
+        </div>
+      {% else %}
+        {% for item in cart.items %}
+          <div class="cart-item" data-key="{{ item.key }}">
+            <div class="cart-item-img">
+              {% if item.image %}
+                <img src="{{ item.image | img_url: '120x120', crop: 'center' }}" alt="{{ item.title | escape }}">
+              {% else %}
+                🚵
+              {% endif %}
+            </div>
+            <div class="cart-item-info">
+              <div class="cart-item-name">{{ item.product.title }}</div>
+              {% unless item.variant.title == 'Default Title' %}
+                <div style="font-size:0.75rem;color:#666;margin-bottom:3px;">{{ item.variant.title }}</div>
+              {% endunless %}
+              <div class="cart-item-price">{{ item.price | money }}</div>
+              <div class="cart-item-qty">
+                <button class="qty-btn" data-action="decrease" data-key="{{ item.key }}">−</button>
+                <span class="qty-value">{{ item.quantity }}</span>
+                <button class="qty-btn" data-action="increase" data-key="{{ item.key }}">+</button>
+              </div>
+            </div>
+            <button class="cart-item-remove" data-key="{{ item.key }}" aria-label="Eliminar">✕</button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+
+    <div class="cart-drawer-footer">
+      <div class="cart-subtotal">
+        <span>Subtotal</span>
+        <strong id="cart-total">{{ cart.total_price | money }}</strong>
+      </div>
+      <a href="/checkout" class="btn-checkout">Ir al checkout →</a>
+    </div>
+  </div>
+
+  <!-- ── CONTENT ── -->
+  <main id="main-content">
+    {{ content_for_layout }}
+  </main>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand-name">{{ shop.name }}</div>
+        <p class="footer-brand-desc">{{ settings.shop_tagline }}</p>
+      </div>
+      {% for block in linklists %}{% endfor %}
+      <div class="footer-col">
+        <h4>Tienda</h4>
+        <ul>
+          {% for link in linklists.footer-shop.links %}
+            <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Ayuda</h4>
+        <ul>
+          {% for link in linklists.footer-help.links %}
+            <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contacto</h4>
+        <ul>
+          <li><a href="/pages/about">Sobre nosotros</a></li>
+          <li><a href="/blogs/news">Blog MTB</a></li>
+          <li><a href="{{ shop.email | prepend: 'mailto:' }}">Email</a></li>
+          <li><a href="/pages/contact">WhatsApp / Tel</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; {{ 'now' | date: '%Y' }} {{ shop.name }} — Todos los derechos reservados
+    </div>
+  </footer>
+
+  <!-- ── TOAST ── -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ── Cart drawer open/close ──
+    const cartToggle  = document.getElementById('cart-toggle');
+    const cartClose   = document.getElementById('cart-close');
+    const cartDrawer  = document.getElementById('cart-drawer');
+    const cartOverlay = document.getElementById('cart-overlay');
+
+    function openCart()  { cartDrawer.classList.add('open'); cartOverlay.classList.add('open'); }
+    function closeCart() { cartDrawer.classList.remove('open'); cartOverlay.classList.remove('open'); }
+
+    cartToggle.addEventListener('click', openCart);
+    cartClose.addEventListener('click', closeCart);
+    cartOverlay.addEventListener('click', closeCart);
+
+    // ── Toast ──
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+    // ── Update cart UI ──
+    async function refreshCart() {
+      const res  = await fetch('/cart.js');
+      const cart = await res.json();
+
+      document.getElementById('cart-count').textContent = cart.item_count;
+      document.getElementById('cart-total').textContent = formatMoney(cart.total_price);
+
+      const itemsEl = document.getElementById('cart-items');
+      if (cart.item_count === 0) {
+        itemsEl.innerHTML = `<div class="cart-empty"><span>🏔️</span>Tu carrito está vacío.<br>¡Explorá nuestros productos!</div>`;
+        return;
+      }
+
+      itemsEl.innerHTML = cart.items.map(item => `
+        <div class="cart-item" data-key="${item.key}">
+          <div class="cart-item-img">
+            ${item.image ? `<img src="${item.image}" alt="${item.title}">` : '🚵'}
+          </div>
+          <div class="cart-item-info">
+            <div class="cart-item-name">${item.product_title}</div>
+            ${item.variant_title !== 'Default Title' ? `<div style="font-size:0.75rem;color:#666;margin-bottom:3px;">${item.variant_title}</div>` : ''}
+            <div class="cart-item-price">${formatMoney(item.price)}</div>
+            <div class="cart-item-qty">
+              <button class="qty-btn" data-action="decrease" data-key="${item.key}">−</button>
+              <span class="qty-value">${item.quantity}</span>
+              <button class="qty-btn" data-action="increase" data-key="${item.key}">+</button>
+            </div>
+          </div>
+          <button class="cart-item-remove" data-key="${item.key}" aria-label="Eliminar">✕</button>
+        </div>
+      `).join('');
+
+      bindCartItemEvents();
+    }
+
+    function formatMoney(cents) {
+      return '$' + (cents / 100).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    }
+
+    // ── Add to cart ──
+    async function addToCart(variantId, qty = 1, btn = null) {
+      if (btn) { btn.disabled = true; btn.textContent = '...'; }
+      try {
+        const res = await fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: variantId, quantity: qty })
+        });
+        if (!res.ok) throw new Error();
+        await refreshCart();
+        showToast('¡Agregado al carrito! 🚵');
+        openCart();
+      } catch {
+        showToast('Error al agregar. Intenta de nuevo.');
+      } finally {
+        if (btn) { btn.disabled = false; btn.textContent = '+ Agregar'; }
+      }
+    }
+
+    // ── Update quantity / remove ──
+    async function updateCartItem(key, qty) {
+      await fetch('/cart/change.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: key, quantity: qty })
+      });
+      await refreshCart();
+    }
+
+    function bindCartItemEvents() {
+      document.querySelectorAll('.qty-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const key    = btn.dataset.key;
+          const action = btn.dataset.action;
+          const qtyEl  = btn.closest('.cart-item-qty').querySelector('.qty-value');
+          const current = parseInt(qtyEl.textContent);
+          await updateCartItem(key, action === 'increase' ? current + 1 : Math.max(0, current - 1));
+        });
+      });
+      document.querySelectorAll('.cart-item-remove').forEach(btn => {
+        btn.addEventListener('click', () => updateCartItem(btn.dataset.key, 0));
+      });
+    }
+
+    // ── Bind add-to-cart buttons (for cards rendered server-side) ──
+    document.querySelectorAll('.add-to-cart[data-variant-id]').forEach(btn => {
+      btn.addEventListener('click', () => addToCart(btn.dataset.variantId, 1, btn));
+    });
+
+    bindCartItemEvents();
+
+    // Expose globally for product page
+    window.MTB = { addToCart, refreshCart };
+  </script>
+
+</body>
+</html>

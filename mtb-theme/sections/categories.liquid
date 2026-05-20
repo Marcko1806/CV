@@ -1,0 +1,49 @@
+<div class="section">
+  <h2 class="section-title">{{ section.settings.title }}</h2>
+  <p class="section-subtitle">{{ section.settings.subtitle }}</p>
+  <div class="categories-grid">
+    {% for block in section.blocks %}
+      {% assign col = collections[block.settings.collection_handle] %}
+      <a href="{% if col != blank %}/collections/{{ col.handle }}{% else %}#{% endif %}" class="category-card" {{ block.shopify_attributes }}>
+        <span class="category-icon">{{ block.settings.icon }}</span>
+        <div class="category-name">{{ block.settings.label | default: col.title }}</div>
+        <div class="category-count">
+          {% if col != blank %}{{ col.products_count }} productos{% endif %}
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Categorías",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Título", "default": "Categorías" },
+    { "type": "text", "id": "subtitle", "label": "Subtítulo", "default": "Encuentra todo lo que necesitas para tu próxima aventura" }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Categoría",
+      "settings": [
+        { "type": "collection", "id": "collection_handle", "label": "Colección" },
+        { "type": "text", "id": "label", "label": "Nombre (opcional, sobreescribe el de la colección)" },
+        { "type": "text", "id": "icon", "label": "Emoji ícono", "default": "🚵" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Categorías",
+      "blocks": [
+        { "type": "category", "settings": { "icon": "🚵", "label": "Bicicletas MTB" } },
+        { "type": "category", "settings": { "icon": "⚙️", "label": "Repuestos" } },
+        { "type": "category", "settings": { "icon": "🪖", "label": "Protección" } },
+        { "type": "category", "settings": { "icon": "👕", "label": "Ropa Técnica" } },
+        { "type": "category", "settings": { "icon": "🔧", "label": "Herramientas" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

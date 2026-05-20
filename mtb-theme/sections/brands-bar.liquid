@@ -1,0 +1,43 @@
+{% if settings.show_brands_bar %}
+<div class="brands-section">
+  <div class="brands-label">{{ section.settings.label }}</div>
+  <div class="brands-list">
+    {% for block in section.blocks %}
+      <span class="brand-item" {{ block.shopify_attributes }}>{{ block.settings.name }}</span>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Marcas",
+  "settings": [
+    { "type": "text", "id": "label", "label": "Etiqueta superior", "default": "Marcas que vendemos" }
+  ],
+  "blocks": [
+    {
+      "type": "brand",
+      "name": "Marca",
+      "settings": [
+        { "type": "text", "id": "name", "label": "Nombre de la marca", "default": "Marca" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Marcas",
+      "blocks": [
+        { "type": "brand", "settings": { "name": "Trek" } },
+        { "type": "brand", "settings": { "name": "Shimano" } },
+        { "type": "brand", "settings": { "name": "SRAM" } },
+        { "type": "brand", "settings": { "name": "Fox" } },
+        { "type": "brand", "settings": { "name": "RockShox" } },
+        { "type": "brand", "settings": { "name": "Santa Cruz" } },
+        { "type": "brand", "settings": { "name": "Specialized" } },
+        { "type": "brand", "settings": { "name": "Giant" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

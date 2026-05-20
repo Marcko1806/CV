@@ -1,0 +1,26 @@
+<section class="hero">
+  <div class="hero-badge">{{ section.settings.badge }}</div>
+  <h1>{{ section.settings.heading_line1 }}<br><span>{{ section.settings.heading_line2 }}</span></h1>
+  <p>{{ section.settings.subheading }}</p>
+  <div class="hero-cta">
+    <a href="{{ section.settings.cta_primary_url }}" class="btn-primary">{{ section.settings.cta_primary_label }}</a>
+    <a href="{{ section.settings.cta_secondary_url }}" class="btn-secondary">{{ section.settings.cta_secondary_label }}</a>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero",
+  "settings": [
+    { "type": "text", "id": "badge", "label": "Badge", "default": "Nueva Temporada 2026" },
+    { "type": "text", "id": "heading_line1", "label": "Título línea 1", "default": "Equipate para" },
+    { "type": "text", "id": "heading_line2", "label": "Título línea 2 (verde)", "default": "conquistar el trail" },
+    { "type": "textarea", "id": "subheading", "label": "Subtítulo", "default": "Todo lo que un mountain biker necesita: bicis, repuestos, protección y más. Envíos a todo el país." },
+    { "type": "text", "id": "cta_primary_label", "label": "Botón principal — texto", "default": "Ver Bicis" },
+    { "type": "url", "id": "cta_primary_url", "label": "Botón principal — URL" },
+    { "type": "text", "id": "cta_secondary_label", "label": "Botón secundario — texto", "default": "Repuestos" },
+    { "type": "url", "id": "cta_secondary_url", "label": "Botón secundario — URL" }
+  ],
+  "presets": [{ "name": "Hero" }]
+}
+{% endschema %}

@@ -1,0 +1,24 @@
+<div style="padding: 0 40px; max-width:1280px; margin:0 auto;">
+  <div class="promo-banner">
+    <div class="promo-text">
+      <h2>{{ section.settings.heading_line1 }}<br><span>{{ section.settings.heading_highlight }}</span> {{ section.settings.heading_line2 }}</h2>
+      <p>{{ section.settings.subtext }}</p>
+    </div>
+    <a href="{{ section.settings.cta_url }}" class="btn-primary">{{ section.settings.cta_label }}</a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Banner promocional",
+  "settings": [
+    { "type": "text", "id": "heading_line1", "label": "Texto línea 1", "default": "Temporada de trail." },
+    { "type": "text", "id": "heading_highlight", "label": "Texto destacado (verde)", "default": "Hasta 30% off" },
+    { "type": "text", "id": "heading_line2", "label": "Texto línea 2", "default": "en repuestos." },
+    { "type": "text", "id": "subtext", "label": "Subtexto", "default": "Aprovecha los descuentos de pre-temporada en componentes seleccionados." },
+    { "type": "text", "id": "cta_label", "label": "Texto del botón", "default": "Ver Ofertas" },
+    { "type": "url", "id": "cta_url", "label": "URL del botón" }
+  ],
+  "presets": [{ "name": "Banner promocional" }]
+}
+{% endschema %}

@@ -1,0 +1,35 @@
+{% assign col = collections[section.settings.collection] %}
+
+<div class="section">
+  <h2 class="section-title">{{ section.settings.title | default: col.title }}</h2>
+  <p class="section-subtitle">{{ section.settings.subtitle }}</p>
+
+  <div class="products-grid">
+    {% assign limit = section.settings.products_limit | default: 4 %}
+    {% for product in col.products limit: limit %}
+      {% render 'product-card', product: product %}
+    {% else %}
+      <p style="color:#666;">Asigná una colección a esta sección desde el editor de temas.</p>
+    {% endfor %}
+  </div>
+
+  {% if section.settings.show_view_all and col != blank %}
+    <div style="text-align:center; margin-top:36px;">
+      <a href="/collections/{{ col.handle }}" class="btn-secondary">Ver todos →</a>
+    </div>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "Colección destacada",
+  "settings": [
+    { "type": "collection", "id": "collection", "label": "Colección" },
+    { "type": "text", "id": "title", "label": "Título (opcional)" },
+    { "type": "text", "id": "subtitle", "label": "Subtítulo" },
+    { "type": "range", "id": "products_limit", "label": "Cantidad de productos", "min": 2, "max": 12, "step": 2, "default": 4 },
+    { "type": "checkbox", "id": "show_view_all", "label": "Mostrar botón 'Ver todos'", "default": true }
+  ],
+  "presets": [{ "name": "Colección destacada" }]
+}
+{% endschema %}

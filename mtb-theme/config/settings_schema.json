@@ -1,0 +1,44 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "TrailRiders MTB",
+    "theme_version": "1.0.0",
+    "theme_author": "TrailRiders",
+    "theme_documentation_url": "",
+    "theme_support_url": ""
+  },
+  {
+    "name": "Colores",
+    "settings": [
+      {
+        "type": "color",
+        "id": "color_accent",
+        "label": "Color principal",
+        "default": "#2ecc71"
+      },
+      {
+        "type": "color",
+        "id": "color_bg",
+        "label": "Fondo",
+        "default": "#0f0f0f"
+      }
+    ]
+  },
+  {
+    "name": "Tienda",
+    "settings": [
+      {
+        "type": "text",
+        "id": "shop_tagline",
+        "label": "Slogan de la tienda",
+        "default": "Tu tienda especializada en mountain bike"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_brands_bar",
+        "label": "Mostrar barra de marcas",
+        "default": true
+      }
+    ]
+  }
+]
