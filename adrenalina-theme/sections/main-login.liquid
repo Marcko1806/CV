@@ -1,0 +1,44 @@
+<section class="section">
+  <div class="container container--xnarrow">
+    <h1 class="page-title">{{ 'customer.login.title' | t }}</h1>
+
+    {%- form 'customer_login', class: 'account-form' -%}
+      {{ form.errors | default_errors }}
+      <div class="field">
+        <label for="CustomerEmail">{{ 'customer.login.email' | t }}</label>
+        <input class="field__input" type="email" name="customer[email]" id="CustomerEmail" autocomplete="email" required>
+      </div>
+      <div class="field">
+        <label for="CustomerPassword">{{ 'customer.login.password' | t }}</label>
+        <input class="field__input" type="password" name="customer[password]" id="CustomerPassword" autocomplete="current-password" required>
+      </div>
+      <button type="submit" class="btn btn--lg btn--full">{{ 'customer.login.sign_in' | t }}</button>
+      <p class="account-form__alt">
+        {{ 'customer.login.new_customer' | t }}
+        <a href="{{ routes.account_register_url }}">{{ 'customer.login.create_account' | t }}</a>
+      </p>
+    {%- endform -%}
+
+    <details class="recover-box">
+      <summary class="recover-box__summary">{{ 'customer.login.forgot_password' | t }}</summary>
+      {%- form 'recover_customer_password', class: 'account-form' -%}
+        {{ form.errors | default_errors }}
+        {%- if form.posted_successfully? -%}
+          <p class="form-success" data-recover-success>{{ 'customer.recover.success' | t }}</p>
+        {%- endif -%}
+        <div class="field">
+          <label for="RecoverEmail">{{ 'customer.recover.email' | t }}</label>
+          <input class="field__input" type="email" name="email" id="RecoverEmail" autocomplete="email" required>
+        </div>
+        <button type="submit" class="btn btn--full">{{ 'customer.recover.submit' | t }}</button>
+      {%- endform -%}
+    </details>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Iniciar sesión",
+  "settings": []
+}
+{% endschema %}

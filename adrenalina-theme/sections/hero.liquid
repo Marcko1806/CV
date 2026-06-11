@@ -1,0 +1,129 @@
+<section class="hero hero--{{ section.settings.height }}">
+  {%- if section.settings.image != blank -%}
+    {{ section.settings.image | image_url: width: 2400 | image_tag:
+      loading: 'eager',
+      fetchpriority: 'high',
+      class: 'hero__media',
+      widths: '750, 1100, 1500, 1900, 2400',
+      sizes: '100vw'
+    }}
+  {%- else -%}
+    <div class="hero__media hero__media--placeholder">
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'hero__placeholder-svg' }}
+    </div>
+  {%- endif -%}
+
+  <div class="hero__overlay" style="opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};"></div>
+
+  <div class="container hero__content hero__content--{{ section.settings.content_position }}">
+    {%- if section.settings.kicker != blank -%}
+      <p class="hero__kicker">{{ section.settings.kicker | escape }}</p>
+    {%- endif -%}
+    {%- if section.settings.heading != blank -%}
+      <h2 class="hero__heading">{{ section.settings.heading | escape }}</h2>
+    {%- endif -%}
+    {%- if section.settings.text != blank -%}
+      <p class="hero__text">{{ section.settings.text | escape }}</p>
+    {%- endif -%}
+    {%- if section.settings.button_label != blank or section.settings.button_label_2 != blank -%}
+      <div class="hero__buttons">
+        {%- if section.settings.button_label != blank -%}
+          <a href="{{ section.settings.button_link | default: routes.all_products_collection_url }}" class="btn btn--lg">{{ section.settings.button_label | escape }}</a>
+        {%- endif -%}
+        {%- if section.settings.button_label_2 != blank -%}
+          <a href="{{ section.settings.button_link_2 | default: routes.collections_url }}" class="btn btn--lg btn--outline-light">{{ section.settings.button_label_2 | escape }}</a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero / Portada",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Imagen de fondo"
+    },
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Texto superior",
+      "default": "Mountain bike · Skate · Surf · Patín"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Título",
+      "default": "VIVE LA ADRENALINA"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Subtítulo",
+      "default": "Equipamiento y accesorios para los que no se quedan quietos."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Texto del botón principal",
+      "default": "Comprar ahora"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Enlace del botón principal"
+    },
+    {
+      "type": "text",
+      "id": "button_label_2",
+      "label": "Texto del botón secundario",
+      "default": "Ver colecciones"
+    },
+    {
+      "type": "url",
+      "id": "button_link_2",
+      "label": "Enlace del botón secundario"
+    },
+    {
+      "type": "select",
+      "id": "height",
+      "label": "Altura",
+      "options": [
+        { "value": "small", "label": "Pequeña" },
+        { "value": "medium", "label": "Media" },
+        { "value": "large", "label": "Grande" },
+        { "value": "full", "label": "Pantalla completa" }
+      ],
+      "default": "large"
+    },
+    {
+      "type": "select",
+      "id": "content_position",
+      "label": "Posición del contenido",
+      "options": [
+        { "value": "left", "label": "Izquierda" },
+        { "value": "center", "label": "Centro" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Opacidad de la capa oscura",
+      "min": 0,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "default": 50
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero / Portada"
+    }
+  ]
+}
+{% endschema %}

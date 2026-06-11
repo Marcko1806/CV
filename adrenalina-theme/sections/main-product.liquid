@@ -1,0 +1,230 @@
+{%- assign product_form_id = 'product-form-' | append: section.id -%}
+
+<section class="section product-page" data-product>
+  <div class="container product-page__grid">
+    <div class="product-gallery" data-gallery>
+      <div class="product-gallery__main">
+        {%- for media in product.media -%}
+          <div class="product-gallery__item{% if forloop.first %} is-active{% endif %}" data-media-id="{{ media.id }}">
+            {%- liquid
+              if forloop.first
+                assign img_loading = 'eager'
+              else
+                assign img_loading = 'lazy'
+              endif
+            -%}
+            {{ media.preview_image | image_url: width: 1200 | image_tag:
+              loading: img_loading,
+              class: 'product-gallery__img',
+              widths: '600, 900, 1200',
+              sizes: '(min-width: 990px) 50vw, 100vw'
+            }}
+          </div>
+        {%- else -%}
+          <div class="product-gallery__item is-active">
+            {{ 'product-1' | placeholder_svg_tag: 'product-gallery__img placeholder-svg' }}
+          </div>
+        {%- endfor -%}
+      </div>
+
+      {%- if product.media.size > 1 -%}
+        <div class="product-gallery__thumbs">
+          {%- for media in product.media -%}
+            <button type="button" class="product-gallery__thumb{% if forloop.first %} is-active{% endif %}" data-thumb data-media-id="{{ media.id }}" aria-label="{{ 'products.product.media' | t: index: forloop.index }}">
+              {{ media.preview_image | image_url: width: 150 | image_tag: loading: 'lazy' }}
+            </button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="product-info">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when '@app' -%}
+            {% render block %}
+
+          {%- when 'vendor' -%}
+            {%- if product.vendor != blank -%}
+              <p class="product-info__vendor" {{ block.shopify_attributes }}>{{ product.vendor }}</p>
+            {%- endif -%}
+
+          {%- when 'title' -%}
+            <h1 class="product-info__title" {{ block.shopify_attributes }}>{{ product.title }}</h1>
+
+          {%- when 'price' -%}
+            <div class="product-info__price" {{ block.shopify_attributes }}>
+              {% render 'price', product: product, use_variant: true, product_page: true %}
+            </div>
+
+          {%- when 'variant_picker' -%}
+            {%- unless product.has_only_default_variant -%}
+              <div class="variant-picker" data-variant-picker {{ block.shopify_attributes }}>
+                {%- for option in product.options_with_values -%}
+                  <div class="field">
+                    <label class="field__label" for="Option-{{ section.id }}-{{ forloop.index0 }}">{{ option.name }}</label>
+                    <select id="Option-{{ section.id }}-{{ forloop.index0 }}" class="field__input" data-option-select data-option-index="{{ forloop.index0 }}">
+                      {%- for value in option.values -%}
+                        <option value="{{ value | escape }}"{% if option.selected_value == value %} selected{% endif %}>{{ value }}</option>
+                      {%- endfor -%}
+                    </select>
+                  </div>
+                {%- endfor -%}
+              </div>
+              <script type="application/json" data-variant-json>
+                [
+                  {%- for variant in product.variants -%}
+                    {
+                      "id": {{ variant.id }},
+                      "available": {{ variant.available }},
+                      "options": {{ variant.options | json }},
+                      "price": {{ variant.price | money | json }},
+                      "compare_at_price": {% if variant.compare_at_price > variant.price %}{{ variant.compare_at_price | money | json }}{% else %}null{% endif %},
+                      "media_id": {{ variant.featured_media.id | default: 'null' }}
+                    }{% unless forloop.last %},{% endunless %}
+                  {%- endfor -%}
+                ]
+              </script>
+            {%- endunless -%}
+
+          {%- when 'quantity_selector' -%}
+            <div class="field product-info__quantity" {{ block.shopify_attributes }}>
+              <label class="field__label" for="Quantity-{{ section.id }}">{{ 'products.product.quantity' | t }}</label>
+              <div class="qty">
+                <button type="button" class="qty__btn" data-qty-minus aria-label="{{ 'products.product.decrease' | t }}">{% render 'icon', icon: 'minus', size: 16 %}</button>
+                <input id="Quantity-{{ section.id }}" class="qty__input" type="number" name="quantity" form="{{ product_form_id }}" value="1" min="1" inputmode="numeric">
+                <button type="button" class="qty__btn" data-qty-plus aria-label="{{ 'products.product.increase' | t }}">{% render 'icon', icon: 'plus', size: 16 %}</button>
+              </div>
+            </div>
+
+          {%- when 'buy_buttons' -%}
+            <div class="product-info__buy" {{ block.shopify_attributes }}>
+              {%- form 'product', product, id: product_form_id, class: 'product-form', novalidate: 'novalidate' -%}
+                <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}" data-variant-id>
+                <button
+                  type="submit"
+                  name="add"
+                  class="btn btn--lg btn--full"
+                  data-atc
+                  {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}
+                >
+                  <span data-atc-text>
+                    {%- if product.selected_or_first_available_variant.available -%}
+                      {{ 'products.product.add_to_cart' | t }}
+                    {%- else -%}
+                      {{ 'products.product.sold_out' | t }}
+                    {%- endif -%}
+                  </span>
+                </button>
+                {%- if block.settings.show_dynamic_checkout -%}
+                  {{ form | payment_button }}
+                {%- endif -%}
+              {%- endform -%}
+            </div>
+
+          {%- when 'description' -%}
+            {%- if product.description != blank -%}
+              <div class="product-info__description rte" {{ block.shopify_attributes }}>{{ product.description }}</div>
+            {%- endif -%}
+
+          {%- when 'collapsible_tab' -%}
+            <details class="collapsible" {{ block.shopify_attributes }}>
+              <summary class="collapsible__summary">
+                {{ block.settings.heading | escape }}
+                {% render 'icon', icon: 'chevron-down', size: 16 %}
+              </summary>
+              <div class="collapsible__content rte">{{ block.settings.content }}</div>
+            </details>
+
+          {%- when 'text' -%}
+            {%- if block.settings.text != blank -%}
+              <p class="product-info__text" {{ block.shopify_attributes }}>{{ block.settings.text | escape }}</p>
+            {%- endif -%}
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Producto",
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "vendor",
+      "name": "Marca",
+      "limit": 1
+    },
+    {
+      "type": "title",
+      "name": "Título",
+      "limit": 1
+    },
+    {
+      "type": "price",
+      "name": "Precio",
+      "limit": 1
+    },
+    {
+      "type": "variant_picker",
+      "name": "Selector de variantes",
+      "limit": 1
+    },
+    {
+      "type": "quantity_selector",
+      "name": "Selector de cantidad",
+      "limit": 1
+    },
+    {
+      "type": "buy_buttons",
+      "name": "Botones de compra",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_dynamic_checkout",
+          "label": "Mostrar botones de pago dinámico",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "description",
+      "name": "Descripción",
+      "limit": 1
+    },
+    {
+      "type": "collapsible_tab",
+      "name": "Pestaña desplegable",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Título",
+          "default": "Envío y devoluciones"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Contenido",
+          "default": "<p>Envío en 24-72 h. Devoluciones gratuitas durante 30 días.</p>"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Texto",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Texto"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

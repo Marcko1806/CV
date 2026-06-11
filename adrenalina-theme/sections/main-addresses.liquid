@@ -1,0 +1,50 @@
+<section class="section">
+  <div class="container container--narrow">
+    <a href="{{ routes.account_url }}" class="link-arrow">&larr; {{ 'customer.account.return' | t }}</a>
+    <h1 class="page-title">{{ 'customer.addresses.title' | t }}</h1>
+
+    <details class="address-new">
+      <summary class="btn">{{ 'customer.addresses.add_new' | t }}</summary>
+      {%- form 'customer_address', customer.new_address, class: 'address-form' -%}
+        {% render 'address-form-fields', form: form %}
+        <button type="submit" class="btn">{{ 'customer.addresses.add' | t }}</button>
+      {%- endform -%}
+    </details>
+
+    {%- paginate customer.addresses by 10 -%}
+      <div class="address-list">
+        {%- for address in customer.addresses -%}
+          <div class="address-card">
+            {%- if address == customer.default_address -%}
+              <span class="badge badge--sale">{{ 'customer.addresses.default' | t }}</span>
+            {%- endif -%}
+            <div class="account-address">{{ address | format_address }}</div>
+
+            <div class="address-card__actions">
+              <details class="address-edit">
+                <summary class="link-arrow">{{ 'customer.addresses.edit' | t }}</summary>
+                {%- form 'customer_address', address, class: 'address-form' -%}
+                  {% render 'address-form-fields', form: form, id_suffix: address.id %}
+                  <button type="submit" class="btn">{{ 'customer.addresses.update' | t }}</button>
+                {%- endform -%}
+              </details>
+
+              <form method="post" action="{{ routes.account_addresses_url }}/{{ address.id }}" data-confirm="{{ 'customer.addresses.delete_confirm' | t | escape }}">
+                <input type="hidden" name="_method" value="delete">
+                <button type="submit" class="link-danger">{{ 'customer.addresses.delete' | t }}</button>
+              </form>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+      {% render 'pagination', paginate: paginate %}
+    {%- endpaginate -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Direcciones",
+  "settings": []
+}
+{% endschema %}

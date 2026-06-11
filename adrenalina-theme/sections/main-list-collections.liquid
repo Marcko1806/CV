@@ -1,0 +1,50 @@
+<section class="section">
+  <div class="container">
+    <h1 class="page-title">{{ 'collections.general.title' | t }}</h1>
+
+    {%- paginate collections by 12 -%}
+      <div class="grid grid--{{ section.settings.columns }}col">
+        {%- for collection in collections -%}
+          <a href="{{ collection.url }}" class="collection-card">
+            <div class="collection-card__media">
+              {%- if collection.featured_image -%}
+                {{ collection.featured_image | image_url: width: 900 | image_tag:
+                  loading: 'lazy',
+                  class: 'collection-card__img',
+                  widths: '450, 675, 900',
+                  sizes: '(min-width: 990px) 33vw, 50vw'
+                }}
+              {%- else -%}
+                {%- assign ph_index = forloop.index0 | modulo: 6 | plus: 1 -%}
+                {{ 'collection-' | append: ph_index | placeholder_svg_tag: 'collection-card__img placeholder-svg' }}
+              {%- endif -%}
+            </div>
+            <div class="collection-card__overlay"></div>
+            <h2 class="collection-card__title">
+              {{ collection.title }}
+              {% render 'icon', icon: 'arrow-right', size: 18 %}
+            </h2>
+          </a>
+        {%- endfor -%}
+      </div>
+      {% render 'pagination', paginate: paginate %}
+    {%- endpaginate -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Lista de todas las colecciones",
+  "settings": [
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Columnas en escritorio",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    }
+  ]
+}
+{% endschema %}

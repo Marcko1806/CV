@@ -1,0 +1,56 @@
+<section class="section">
+  <div class="container">
+    <h1 class="page-title">{{ 'general.search.title' | t }}</h1>
+
+    <form action="{{ routes.search_url }}" method="get" role="search" class="search-form">
+      <input
+        type="search"
+        name="q"
+        value="{{ search.terms | escape }}"
+        placeholder="{{ 'general.search.placeholder' | t }}"
+        class="field__input search-form__input"
+        aria-label="{{ 'general.search.placeholder' | t }}"
+      >
+      <button type="submit" class="btn">
+        {% render 'icon', icon: 'search', size: 18 %}
+        <span class="visually-hidden">{{ 'general.search.submit' | t }}</span>
+      </button>
+    </form>
+
+    {%- if search.performed -%}
+      {%- paginate search.results by 24 -%}
+        {%- if search.results_count == 0 -%}
+          <p class="search-empty">{{ 'general.search.no_results' | t: terms: search.terms }}</p>
+        {%- else -%}
+          <p class="search-count">{{ 'general.search.results_with_count' | t: count: search.results_count, terms: search.terms }}</p>
+          <div class="grid grid--4col">
+            {%- for item in search.results -%}
+              {%- if item.object_type == 'product' -%}
+                {% render 'product-card', card_product: item %}
+              {%- else -%}
+                <a href="{{ item.url }}" class="search-result-card">
+                  <span class="search-result-card__type">
+                    {%- if item.object_type == 'article' -%}
+                      {{ 'general.search.article' | t }}
+                    {%- else -%}
+                      {{ 'general.search.page' | t }}
+                    {%- endif -%}
+                  </span>
+                  <h3 class="search-result-card__title">{{ item.title }}</h3>
+                </a>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+          {% render 'pagination', paginate: paginate %}
+        {%- endif -%}
+      {%- endpaginate -%}
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Búsqueda",
+  "settings": []
+}
+{% endschema %}

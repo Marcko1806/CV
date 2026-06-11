@@ -1,0 +1,111 @@
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      {%- if section.settings.heading != blank -%}
+        <h2 class="section-title">{{ section.settings.heading | escape }}</h2>
+      {%- endif -%}
+      {%- if section.settings.show_view_all -%}
+        <a href="{{ routes.collections_url }}" class="link-arrow">{{ 'collections.general.view_all' | t }} {% render 'icon', icon: 'arrow-right', size: 16 %}</a>
+      {%- endif -%}
+    </div>
+
+    <div class="grid grid--{{ section.settings.columns }}col">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign col = block.settings.collection
+          assign card_title = block.settings.title | default: col.title
+          if card_title == blank
+            assign card_title = 'onboarding.collection_title' | t
+          endif
+          assign card_image = block.settings.image | default: col.featured_image
+        -%}
+        <a href="{{ col.url | default: routes.collections_url }}" class="collection-card" {{ block.shopify_attributes }}>
+          <div class="collection-card__media">
+            {%- if card_image -%}
+              {{ card_image | image_url: width: 900 | image_tag:
+                loading: 'lazy',
+                class: 'collection-card__img',
+                widths: '450, 675, 900',
+                sizes: '(min-width: 990px) 25vw, 50vw'
+              }}
+            {%- else -%}
+              {%- assign ph_index = forloop.index0 | modulo: 6 | plus: 1 -%}
+              {{ 'collection-' | append: ph_index | placeholder_svg_tag: 'collection-card__img placeholder-svg' }}
+            {%- endif -%}
+          </div>
+          <div class="collection-card__overlay"></div>
+          <h3 class="collection-card__title">
+            {{ card_title }}
+            {% render 'icon', icon: 'arrow-right', size: 18 %}
+          </h3>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Lista de colecciones",
+  "max_blocks": 8,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Título",
+      "default": "Elige tu terreno"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Mostrar enlace \"Ver todo\"",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Columnas en escritorio",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 4
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Colección",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Colección"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Título personalizado",
+          "info": "Si se deja vacío se usa el nombre de la colección."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Imagen personalizada",
+          "info": "Si se deja vacía se usa la imagen de la colección."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lista de colecciones",
+      "blocks": [
+        { "type": "collection", "settings": { "title": "Mountain Bike" } },
+        { "type": "collection", "settings": { "title": "Skate" } },
+        { "type": "collection", "settings": { "title": "Surf" } },
+        { "type": "collection", "settings": { "title": "Patín" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

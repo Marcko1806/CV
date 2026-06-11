@@ -1,0 +1,80 @@
+<section class="collection-banner{% if collection.image %} collection-banner--has-image{% endif %}">
+  {%- if collection.image -%}
+    {{ collection.image | image_url: width: 2000 | image_tag:
+      loading: 'eager',
+      class: 'collection-banner__img',
+      sizes: '100vw'
+    }}
+    <div class="collection-banner__overlay"></div>
+  {%- endif -%}
+  <div class="container collection-banner__content">
+    <h1 class="collection-banner__title">{{ collection.title }}</h1>
+    {%- if section.settings.show_description and collection.description != blank -%}
+      <div class="collection-banner__description rte">{{ collection.description }}</div>
+    {%- endif -%}
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    {%- paginate collection.products by section.settings.products_per_page -%}
+      <div class="collection-toolbar">
+        <p class="collection-toolbar__count">{{ 'collections.general.products_count' | t: count: collection.products_count }}</p>
+        {%- if section.settings.show_sort -%}
+          <div class="collection-toolbar__sort">
+            <label for="SortBy">{{ 'collections.general.sort_label' | t }}</label>
+            {%- assign current_sort = collection.sort_by | default: collection.default_sort_by -%}
+            <select id="SortBy" class="field__input" data-sort-by>
+              {%- for option in collection.sort_options -%}
+                <option value="{{ option.value }}"{% if option.value == current_sort %} selected{% endif %}>{{ option.name }}</option>
+              {%- endfor -%}
+            </select>
+          </div>
+        {%- endif -%}
+      </div>
+
+      {%- if collection.products.size > 0 -%}
+        <div class="grid grid--4col">
+          {%- for product in collection.products -%}
+            {% render 'product-card', card_product: product %}
+          {%- endfor -%}
+        </div>
+        {% render 'pagination', paginate: paginate %}
+      {%- else -%}
+        <div class="empty-state">
+          <p>{{ 'collections.general.no_matches' | t }}</p>
+          <a href="{{ routes.all_products_collection_url }}" class="btn">{{ 'general.404.link' | t }}</a>
+        </div>
+      {%- endif -%}
+    {%- endpaginate -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Colección",
+  "settings": [
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "Productos por página",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 24
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sort",
+      "label": "Mostrar selector de orden",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Mostrar descripción de la colección",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,150 @@
+<footer class="site-footer">
+  <div class="container">
+    <div class="site-footer__grid">
+      <div class="site-footer__block site-footer__brand">
+        {%- if settings.logo != blank -%}
+          <a href="{{ routes.root_url }}">
+            {{ settings.logo | image_url: width: 600 | image_tag: class: 'site-footer__logo-img', width: settings.logo_width, alt: shop.name }}
+          </a>
+        {%- else -%}
+          <a href="{{ routes.root_url }}" class="site-footer__logo-text">{{ shop.name }}</a>
+        {%- endif -%}
+        {%- if section.settings.show_social -%}
+          {% render 'social-icons', class: 'site-footer__social' %}
+        {%- endif -%}
+      </div>
+
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'link_list' -%}
+            <div class="site-footer__block" {{ block.shopify_attributes }}>
+              <h3 class="site-footer__heading">{{ block.settings.heading | escape }}</h3>
+              <ul class="site-footer__menu" role="list">
+                {%- for link in block.settings.menu.links -%}
+                  <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                {%- endfor -%}
+              </ul>
+            </div>
+
+          {%- when 'text' -%}
+            <div class="site-footer__block" {{ block.shopify_attributes }}>
+              <h3 class="site-footer__heading">{{ block.settings.heading | escape }}</h3>
+              <div class="site-footer__text rte">{{ block.settings.text }}</div>
+            </div>
+
+          {%- when 'newsletter' -%}
+            <div class="site-footer__block" {{ block.shopify_attributes }}>
+              <h3 class="site-footer__heading">{{ block.settings.heading | escape }}</h3>
+              {%- if block.settings.text != blank -%}
+                <p class="site-footer__text">{{ block.settings.text | escape }}</p>
+              {%- endif -%}
+              {%- form 'customer', class: 'newsletter-form' -%}
+                <input type="hidden" name="contact[tags]" value="newsletter">
+                {%- if form.posted_successfully? -%}
+                  <p class="form-success">{{ 'general.newsletter.success' | t }}</p>
+                {%- else -%}
+                  {{ form.errors | default_errors }}
+                  <div class="newsletter-form__row">
+                    <label class="visually-hidden" for="FooterNewsletter-{{ section.id }}">{{ 'general.newsletter.label' | t }}</label>
+                    <input id="FooterNewsletter-{{ section.id }}" class="field__input" type="email" name="contact[email]" required autocomplete="email" placeholder="{{ 'general.newsletter.label' | t }}">
+                    <button type="submit" class="btn">{{ 'general.newsletter.button' | t }}</button>
+                  </div>
+                {%- endif -%}
+              {%- endform -%}
+            </div>
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+
+    <div class="site-footer__bottom">
+      <p class="site-footer__copyright">&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}</p>
+      {%- if section.settings.show_payment -%}
+        <div class="site-footer__payments">
+          {%- for type in shop.enabled_payment_types -%}
+            {{ type | payment_type_svg_tag: class: 'payment-icon' }}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Pie de página",
+  "enabled_on": {
+    "groups": ["footer"]
+  },
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_social",
+      "label": "Mostrar redes sociales",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment",
+      "label": "Mostrar métodos de pago",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link_list",
+      "name": "Menú",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Título",
+          "default": "Enlaces"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menú",
+          "default": "footer"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Texto",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Título",
+          "default": "Sobre nosotros"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Texto",
+          "default": "<p>Tu tienda de deportes extremos.</p>"
+        }
+      ]
+    },
+    {
+      "type": "newsletter",
+      "name": "Newsletter",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Título",
+          "default": "Únete al club"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Texto",
+          "default": "Novedades, ofertas y contenido exclusivo."
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

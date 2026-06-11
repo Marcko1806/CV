@@ -1,0 +1,79 @@
+<article class="section">
+  <div class="container container--narrow">
+    <header class="article-header">
+      <p class="article-header__meta">
+        <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: '%d/%m/%Y' }}</time>
+        {%- if article.author != blank %} &middot; {{ article.author }}{% endif -%}
+      </p>
+      <h1 class="page-title">{{ article.title }}</h1>
+    </header>
+
+    {%- if article.image -%}
+      <div class="article-image">
+        {{ article.image | image_url: width: 1600 | image_tag:
+          loading: 'eager',
+          class: 'article-image__img',
+          widths: '800, 1200, 1600',
+          sizes: '(min-width: 990px) 800px, 100vw'
+        }}
+      </div>
+    {%- endif -%}
+
+    <div class="rte">{{ article.content }}</div>
+
+    {%- if blog.comments_enabled? -%}
+      <div class="article-comments" id="comments">
+        <h2 class="article-comments__title">{{ 'blogs.article.comments_with_count' | t: count: article.comments_count }}</h2>
+
+        {%- if article.comments_count > 0 -%}
+          {%- paginate article.comments by 20 -%}
+            {%- for comment in article.comments -%}
+              <div class="comment">
+                <p class="comment__meta"><strong>{{ comment.author }}</strong> &middot; {{ comment.created_at | date: '%d/%m/%Y' }}</p>
+                <div class="comment__body rte">{{ comment.content }}</div>
+              </div>
+            {%- endfor -%}
+            {% render 'pagination', paginate: paginate %}
+          {%- endpaginate -%}
+        {%- endif -%}
+
+        {%- form 'new_comment', article, class: 'comment-form' -%}
+          {%- if form.posted_successfully? -%}
+            <p class="form-success">
+              {%- if blog.moderated? -%}
+                {{ 'blogs.article.success_moderated' | t }}
+              {%- else -%}
+                {{ 'blogs.article.success' | t }}
+              {%- endif -%}
+            </p>
+          {%- endif -%}
+          {{ form.errors | default_errors }}
+
+          <h3>{{ 'blogs.article.comment_form_title' | t }}</h3>
+          <div class="form-grid">
+            <div class="field">
+              <label for="CommentAuthor">{{ 'blogs.article.name' | t }}</label>
+              <input class="field__input" type="text" name="comment[author]" id="CommentAuthor" autocomplete="name" value="{{ form.author }}" required>
+            </div>
+            <div class="field">
+              <label for="CommentEmail">{{ 'blogs.article.email' | t }}</label>
+              <input class="field__input" type="email" name="comment[email]" id="CommentEmail" autocomplete="email" value="{{ form.email }}" required>
+            </div>
+          </div>
+          <div class="field">
+            <label for="CommentBody">{{ 'blogs.article.message' | t }}</label>
+            <textarea class="field__input" name="comment[body]" id="CommentBody" rows="5" required>{{ form.body }}</textarea>
+          </div>
+          <button type="submit" class="btn">{{ 'blogs.article.post' | t }}</button>
+        {%- endform -%}
+      </div>
+    {%- endif -%}
+  </div>
+</article>
+
+{% schema %}
+{
+  "name": "Artículo del blog",
+  "settings": []
+}
+{% endschema %}

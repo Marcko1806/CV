@@ -1,0 +1,142 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Adrenalina",
+    "theme_version": "1.0.0",
+    "theme_author": "Marcko",
+    "theme_documentation_url": "https://shopify.dev/docs/themes",
+    "theme_support_url": "https://shopify.dev/docs/themes"
+  },
+  {
+    "name": "Colores",
+    "settings": [
+      {
+        "type": "color",
+        "id": "color_background",
+        "label": "Fondo",
+        "default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "id": "color_text",
+        "label": "Texto",
+        "default": "#16161a"
+      },
+      {
+        "type": "color",
+        "id": "color_accent",
+        "label": "Color de acento",
+        "default": "#ff4d00"
+      },
+      {
+        "type": "color",
+        "id": "color_accent_text",
+        "label": "Texto sobre el color de acento",
+        "default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "id": "color_dark",
+        "label": "Fondo oscuro (encabezado y pie)",
+        "default": "#0d0d10"
+      },
+      {
+        "type": "color",
+        "id": "color_dark_text",
+        "label": "Texto sobre fondo oscuro",
+        "default": "#f5f5f5"
+      }
+    ]
+  },
+  {
+    "name": "Tipografía",
+    "settings": [
+      {
+        "type": "font_picker",
+        "id": "type_header_font",
+        "label": "Fuente de títulos",
+        "default": "anton_n4",
+        "info": "Para un look deportivo prueba Anton, Archivo Black o Montserrat."
+      },
+      {
+        "type": "font_picker",
+        "id": "type_body_font",
+        "label": "Fuente de texto",
+        "default": "assistant_n4"
+      }
+    ]
+  },
+  {
+    "name": "Logo",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Logo"
+      },
+      {
+        "type": "range",
+        "id": "logo_width",
+        "min": 80,
+        "max": 300,
+        "step": 10,
+        "unit": "px",
+        "label": "Ancho del logo",
+        "default": 140
+      },
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon",
+        "info": "Se mostrará a 32 x 32 px"
+      }
+    ]
+  },
+  {
+    "name": "Redes sociales",
+    "settings": [
+      {
+        "type": "url",
+        "id": "social_instagram_link",
+        "label": "Instagram"
+      },
+      {
+        "type": "url",
+        "id": "social_tiktok_link",
+        "label": "TikTok"
+      },
+      {
+        "type": "url",
+        "id": "social_youtube_link",
+        "label": "YouTube"
+      },
+      {
+        "type": "url",
+        "id": "social_facebook_link",
+        "label": "Facebook"
+      },
+      {
+        "type": "url",
+        "id": "social_twitter_link",
+        "label": "X (Twitter)"
+      }
+    ]
+  },
+  {
+    "name": "Tarjetas de producto",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "card_show_vendor",
+        "label": "Mostrar la marca",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "card_hover_second_image",
+        "label": "Mostrar la segunda imagen al pasar el cursor",
+        "default": true
+      }
+    ]
+  }
+]

@@ -1,0 +1,49 @@
+<section class="newsletter-band">
+  <div class="container newsletter-band__inner">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="newsletter-band__heading">{{ section.settings.heading | escape }}</h2>
+    {%- endif -%}
+    {%- if section.settings.text != blank -%}
+      <p class="newsletter-band__text">{{ section.settings.text | escape }}</p>
+    {%- endif -%}
+
+    {%- form 'customer', class: 'newsletter-form newsletter-form--band' -%}
+      <input type="hidden" name="contact[tags]" value="newsletter">
+      {%- if form.posted_successfully? -%}
+        <p class="form-success">{{ 'general.newsletter.success' | t }}</p>
+      {%- else -%}
+        {{ form.errors | default_errors }}
+        <div class="newsletter-form__row">
+          <label class="visually-hidden" for="NewsletterEmail-{{ section.id }}">{{ 'general.newsletter.label' | t }}</label>
+          <input id="NewsletterEmail-{{ section.id }}" class="field__input" type="email" name="contact[email]" required autocomplete="email" placeholder="{{ 'general.newsletter.label' | t }}">
+          <button type="submit" class="btn">{{ 'general.newsletter.button' | t }}</button>
+        </div>
+      {%- endif -%}
+    {%- endform -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Newsletter",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Título",
+      "default": "ÚNETE AL CLUB"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Texto",
+      "default": "Novedades, ofertas y contenido exclusivo. Sin spam."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Newsletter"
+    }
+  ]
+}
+{% endschema %}

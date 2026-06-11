@@ -1,0 +1,35 @@
+{
+  "type": "footer",
+  "name": "Grupo de pie de página",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "links": {
+          "type": "link_list",
+          "settings": {
+            "heading": "Enlaces",
+            "menu": "footer"
+          }
+        },
+        "about": {
+          "type": "text",
+          "settings": {
+            "heading": "Sobre nosotros",
+            "text": "<p>Tu tienda de deportes extremos: mountain bike, skate, surf y patín. Equipamiento probado por riders, para riders.</p>"
+          }
+        },
+        "newsletter": {
+          "type": "newsletter",
+          "settings": {
+            "heading": "Únete al club",
+            "text": "Novedades, ofertas y contenido exclusivo. Sin spam."
+          }
+        }
+      },
+      "block_order": ["links", "about", "newsletter"],
+      "settings": {}
+    }
+  },
+  "order": ["footer"]
+}

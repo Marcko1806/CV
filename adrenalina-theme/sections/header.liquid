@@ -1,0 +1,99 @@
+<header class="site-header{% if section.settings.sticky %} site-header--sticky{% endif %}" data-header>
+  <div class="container site-header__inner">
+    <button class="site-header__menu-toggle" data-menu-toggle aria-expanded="false" aria-controls="MobileNav" aria-label="{{ 'general.accessibility.menu' | t }}">
+      <span class="site-header__menu-icon-open">{% render 'icon', icon: 'menu' %}</span>
+      <span class="site-header__menu-icon-close">{% render 'icon', icon: 'close' %}</span>
+    </button>
+
+    <a href="{{ routes.root_url }}" class="site-header__logo">
+      {%- if settings.logo != blank -%}
+        {{ settings.logo | image_url: width: 600 | image_tag: class: 'site-header__logo-img', width: settings.logo_width, alt: shop.name }}
+      {%- else -%}
+        <span class="site-header__logo-text">{{ shop.name }}</span>
+      {%- endif -%}
+    </a>
+
+    <nav class="site-nav" aria-label="{{ 'general.accessibility.menu' | t }}">
+      <ul class="site-nav__list" role="list">
+        {%- for link in section.settings.menu.links -%}
+          <li class="site-nav__item{% if link.links != blank %} site-nav__item--has-children{% endif %}">
+            <a href="{{ link.url }}" class="site-nav__link{% if link.active or link.child_active %} site-nav__link--active{% endif %}">
+              {{ link.title }}
+              {%- if link.links != blank %} {% render 'icon', icon: 'chevron-down', size: 14 %}{% endif -%}
+            </a>
+            {%- if link.links != blank -%}
+              <ul class="site-nav__dropdown" role="list">
+                {%- for child in link.links -%}
+                  <li><a href="{{ child.url }}" class="site-nav__dropdown-link">{{ child.title }}</a></li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    <div class="site-header__icons">
+      <a href="{{ routes.search_url }}" class="site-header__icon" aria-label="{{ 'general.accessibility.search' | t }}">
+        {% render 'icon', icon: 'search', size: 22 %}
+      </a>
+      {%- if shop.customer_accounts_enabled -%}
+        <a href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}" class="site-header__icon site-header__icon--account" aria-label="{{ 'general.accessibility.account' | t }}">
+          {% render 'icon', icon: 'user', size: 22 %}
+        </a>
+      {%- endif -%}
+      <a href="{{ routes.cart_url }}" class="site-header__icon site-header__icon--cart" aria-label="{{ 'general.accessibility.cart' | t }}">
+        {% render 'icon', icon: 'cart', size: 22 %}
+        <span class="cart-bubble{% if cart.item_count == 0 %} cart-bubble--empty{% endif %}" data-cart-count>{{ cart.item_count }}</span>
+      </a>
+    </div>
+  </div>
+
+  <nav id="MobileNav" class="mobile-nav" data-mobile-nav hidden aria-label="{{ 'general.accessibility.menu' | t }}">
+    <ul class="mobile-nav__list" role="list">
+      {%- for link in section.settings.menu.links -%}
+        <li>
+          {%- if link.links != blank -%}
+            <details class="mobile-nav__details">
+              <summary class="mobile-nav__link">
+                {{ link.title }}
+                {% render 'icon', icon: 'chevron-down', size: 16 %}
+              </summary>
+              <ul class="mobile-nav__sublist" role="list">
+                <li><a href="{{ link.url }}" class="mobile-nav__sublink">{{ link.title }}</a></li>
+                {%- for child in link.links -%}
+                  <li><a href="{{ child.url }}" class="mobile-nav__sublink">{{ child.title }}</a></li>
+                {%- endfor -%}
+              </ul>
+            </details>
+          {%- else -%}
+            <a href="{{ link.url }}" class="mobile-nav__link">{{ link.title }}</a>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+  </nav>
+</header>
+
+{% schema %}
+{
+  "name": "Encabezado",
+  "enabled_on": {
+    "groups": ["header"]
+  },
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menú",
+      "default": "main-menu"
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky",
+      "label": "Encabezado fijo al hacer scroll",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,116 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "kicker": "Mountain bike · Skate · Surf · Patín",
+        "heading": "VIVE LA ADRENALINA",
+        "text": "Equipamiento y accesorios para los que no se quedan quietos.",
+        "button_label": "Comprar ahora",
+        "button_label_2": "Ver colecciones",
+        "height": "large",
+        "content_position": "left",
+        "overlay_opacity": 55
+      }
+    },
+    "categories": {
+      "type": "featured-collections",
+      "blocks": {
+        "mtb": {
+          "type": "collection",
+          "settings": {
+            "title": "Mountain Bike"
+          }
+        },
+        "skate": {
+          "type": "collection",
+          "settings": {
+            "title": "Skate"
+          }
+        },
+        "surf": {
+          "type": "collection",
+          "settings": {
+            "title": "Surf"
+          }
+        },
+        "patin": {
+          "type": "collection",
+          "settings": {
+            "title": "Patín"
+          }
+        }
+      },
+      "block_order": ["mtb", "skate", "surf", "patin"],
+      "settings": {
+        "heading": "Elige tu terreno",
+        "show_view_all": true,
+        "columns": 4
+      }
+    },
+    "benefits": {
+      "type": "multicolumn",
+      "blocks": {
+        "shipping": {
+          "type": "column",
+          "settings": {
+            "icon": "truck",
+            "heading": "Envío rápido",
+            "text": "Recibe tu pedido en 24-72 h."
+          }
+        },
+        "warranty": {
+          "type": "column",
+          "settings": {
+            "icon": "shield",
+            "heading": "Garantía 2 años",
+            "text": "En todos nuestros productos."
+          }
+        },
+        "returns": {
+          "type": "column",
+          "settings": {
+            "icon": "refresh",
+            "heading": "Devoluciones 30 días",
+            "text": "Cambios y devoluciones sin complicaciones."
+          }
+        },
+        "support": {
+          "type": "column",
+          "settings": {
+            "icon": "chat",
+            "heading": "Atención experta",
+            "text": "Riders que te asesoran de verdad."
+          }
+        }
+      },
+      "block_order": ["shipping", "warranty", "returns", "support"],
+      "settings": {}
+    },
+    "featured": {
+      "type": "featured-products",
+      "settings": {
+        "heading": "Lo más vendido",
+        "products_to_show": 8,
+        "columns": 4
+      }
+    },
+    "story": {
+      "type": "image-with-text",
+      "settings": {
+        "heading": "Nacidos para la aventura",
+        "text": "<p>Somos riders. Probamos cada producto en la montaña, en el skatepark y en el mar antes de ponerlo en la tienda. Solo vendemos lo que usaríamos nosotros.</p>",
+        "button_label": "Conócenos",
+        "layout": "image_first"
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "heading": "ÚNETE AL CLUB",
+        "text": "Novedades, ofertas y contenido exclusivo. Sin spam."
+      }
+    }
+  },
+  "order": ["hero", "categories", "benefits", "featured", "story", "newsletter"]
+}

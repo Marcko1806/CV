@@ -1,0 +1,25 @@
+{%- liquid
+  if use_variant
+    assign target = product.selected_or_first_available_variant
+  else
+    assign target = product
+  endif
+
+  assign price = target.price | default: 1999
+  assign compare_at_price = target.compare_at_price
+  assign on_sale = false
+  if compare_at_price > price
+    assign on_sale = true
+  endif
+
+  assign money_price = price | money
+  if product.price_varies and use_variant != true
+    assign money_price = 'products.product.from_price_html' | t: price: money_price
+  endif
+-%}
+<div class="price{% if on_sale %} price--sale{% endif %}"{% if product_page %} data-price{% endif %}>
+  <span class="price__current"{% if product_page %} data-price-current{% endif %}>{{ money_price }}</span>
+  <s class="price__compare"{% if product_page %} data-price-compare{% endif %}{% unless on_sale %} hidden{% endunless %}>
+    {%- if on_sale %}{{ compare_at_price | money }}{% endif -%}
+  </s>
+</div>

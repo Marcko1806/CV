@@ -1,0 +1,17 @@
+<ul class="social-icons{% if class %} {{ class }}{% endif %}" role="list" aria-label="{{ 'general.social.label' | t }}">
+  {%- if settings.social_instagram_link != blank -%}
+    <li><a href="{{ settings.social_instagram_link }}" target="_blank" rel="noopener" aria-label="Instagram">{% render 'icon', icon: 'instagram', size: 22 %}</a></li>
+  {%- endif -%}
+  {%- if settings.social_tiktok_link != blank -%}
+    <li><a href="{{ settings.social_tiktok_link }}" target="_blank" rel="noopener" aria-label="TikTok">{% render 'icon', icon: 'tiktok', size: 22 %}</a></li>
+  {%- endif -%}
+  {%- if settings.social_youtube_link != blank -%}
+    <li><a href="{{ settings.social_youtube_link }}" target="_blank" rel="noopener" aria-label="YouTube">{% render 'icon', icon: 'youtube', size: 22 %}</a></li>
+  {%- endif -%}
+  {%- if settings.social_facebook_link != blank -%}
+    <li><a href="{{ settings.social_facebook_link }}" target="_blank" rel="noopener" aria-label="Facebook">{% render 'icon', icon: 'facebook', size: 22 %}</a></li>
+  {%- endif -%}
+  {%- if settings.social_twitter_link != blank -%}
+    <li><a href="{{ settings.social_twitter_link }}" target="_blank" rel="noopener" aria-label="X (Twitter)">{% render 'icon', icon: 'twitter', size: 22 %}</a></li>
+  {%- endif -%}
+</ul>

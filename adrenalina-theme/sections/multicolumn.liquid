@@ -1,0 +1,82 @@
+<section class="section section--multicolumn">
+  <div class="container">
+    {%- if section.settings.heading != blank -%}
+      <div class="section-head">
+        <h2 class="section-title">{{ section.settings.heading | escape }}</h2>
+      </div>
+    {%- endif -%}
+
+    <div class="multicolumn grid grid--{{ section.blocks.size | at_most: 4 }}col">
+      {%- for block in section.blocks -%}
+        <div class="multicolumn__item" {{ block.shopify_attributes }}>
+          <span class="multicolumn__icon">{% render 'icon', icon: block.settings.icon, size: 30 %}</span>
+          {%- if block.settings.heading != blank -%}
+            <h3 class="multicolumn__heading">{{ block.settings.heading | escape }}</h3>
+          {%- endif -%}
+          {%- if block.settings.text != blank -%}
+            <p class="multicolumn__text">{{ block.settings.text | escape }}</p>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Columnas con iconos",
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Título"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "column",
+      "name": "Columna",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icono",
+          "options": [
+            { "value": "truck", "label": "Camión (envío)" },
+            { "value": "shield", "label": "Escudo (garantía)" },
+            { "value": "refresh", "label": "Flechas (devoluciones)" },
+            { "value": "chat", "label": "Chat (soporte)" },
+            { "value": "star", "label": "Estrella" },
+            { "value": "check", "label": "Check" }
+          ],
+          "default": "truck"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Título",
+          "default": "Envío rápido"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Texto",
+          "default": "Recibe tu pedido en 24-72 h."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Columnas con iconos",
+      "blocks": [
+        { "type": "column", "settings": { "icon": "truck", "heading": "Envío rápido", "text": "Recibe tu pedido en 24-72 h." } },
+        { "type": "column", "settings": { "icon": "shield", "heading": "Garantía 2 años", "text": "En todos nuestros productos." } },
+        { "type": "column", "settings": { "icon": "refresh", "heading": "Devoluciones 30 días", "text": "Cambios y devoluciones sin complicaciones." } },
+        { "type": "column", "settings": { "icon": "chat", "heading": "Atención experta", "text": "Riders que te asesoran de verdad." } }
+      ]
+    }
+  ]
+}
+{% endschema %}
